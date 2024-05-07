@@ -10,30 +10,30 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { CreatableSelect } from "chakra-react-select";
-import { useState } from "react";
+// import { useState } from "react";
 import { IEquipment } from "../IEquipment";
 import EquipmentCreditItem from "./EquipmentCreditItem";
 import { IEquipmentCreditOption } from "../IEquipment";
 
 type EquipmentFormElementProps = {
-  equip: IEquipment;
+  equipment: IEquipment;
   onChange: (equip: IEquipment) => void;
   onDel: () => void;
 };
 
 export default function EquipmentFormElement({
-  equip,
+  equipment,
   onChange,
   onDel,
 }: EquipmentFormElementProps) {
-  const [equipment, setEquipment] = useState<IEquipment>({ ...equip });
+  // const [equipment, setEquipment] = useState<IEquipment>({ ...equip });
   function handleChange(name: string, value: string | undefined) {
     const updateValue = {
       ...equipment,
       [name]: value,
     };
     console.log(updateValue);
-    setEquipment(updateValue);
+    // setEquipment(updateValue);
     onChange(updateValue);
   }
   function handleRentChange(value: string) {
@@ -41,7 +41,7 @@ export default function EquipmentFormElement({
       ...equipment,
       rent: { price: value, description: equipment.rent.description },
     };
-    setEquipment(updateValue);
+    //setEquipment(updateValue);
     onChange(updateValue);
   }
   function handleRentDescriptionChange(value: string) {
@@ -49,7 +49,7 @@ export default function EquipmentFormElement({
       ...equipment,
       rent: { price: equipment.rent.price, description: value },
     };
-    setEquipment(updateValue);
+    //setEquipment(updateValue);
     onChange(updateValue);
   }
   function handelChangeSale(value: string) {
@@ -57,7 +57,7 @@ export default function EquipmentFormElement({
       ...equipment,
       sale: { price: value, description: equipment.rent.description },
     };
-    setEquipment(updateValue);
+    //setEquipment(updateValue);
     onChange(updateValue);
   }
   function handelChangeSaleDescription(value: string) {
@@ -65,7 +65,7 @@ export default function EquipmentFormElement({
       ...equipment,
       sale: { price: equipment.sale.price, description: value },
     };
-    setEquipment(updateValue);
+    //setEquipment(updateValue);
     onChange(updateValue);
   }
   function handleMandatoryChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -73,13 +73,13 @@ export default function EquipmentFormElement({
       ...equipment,
       mandatory: e.target.checked,
     };
-    setEquipment(updateValue);
+    //setEquipment(updateValue);
     onChange(updateValue);
   }
   const equipmentTypes = [
     {
-      label: equip.type,
-      value: equip.type,
+      label: equipment.type,
+      value: equipment.type,
       variant: "solid",
     },
     {
@@ -127,7 +127,7 @@ export default function EquipmentFormElement({
       ...equipment,
       credit: credit,
     };
-    setEquipment(updateValue);
+    //setEquipment(updateValue);
     onChange(updateValue);
   }
   function handelChangeCredit(item: IEquipmentCreditOption) {
@@ -141,7 +141,7 @@ export default function EquipmentFormElement({
         ...equipment,
         credit: copyList,
       };
-      setEquipment(updateValue);
+      //setEquipment(updateValue);
       onChange(updateValue);
     }
   }
@@ -151,7 +151,7 @@ export default function EquipmentFormElement({
       ...equipment,
       credit: creditList,
     };
-    setEquipment(updateValue);
+    //setEquipment(updateValue);
     onChange(updateValue);
   }
 
@@ -177,7 +177,7 @@ export default function EquipmentFormElement({
       <Input
         size={"sm"}
         placeholder="Название"
-        value={equip.name}
+        value={equipment.name}
         onChange={(v) => handleChange("name", v.target.value)}
       ></Input>
       <HStack mt={"10px"}>
@@ -196,7 +196,7 @@ export default function EquipmentFormElement({
       <Textarea
         size={"sm"}
         placeholder="Описание"
-        value={equip.description}
+        value={equipment.description}
         onChange={(v) => handleChange("description", v.target.value)}
         resize={"none"}
       ></Textarea>

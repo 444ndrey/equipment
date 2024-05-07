@@ -32,7 +32,7 @@ export default function EquipmentForm({
           <EquipmentFormElement
             onChange={(eq) => handleChange(eq, eq.key)}
             key={eq.key}
-            equip={eq}
+            equipment={eq}
             onDel={() => onDel(eq.key)}
           />
         ))}
