@@ -7,6 +7,7 @@ export default function jsonParse(json: string): IEquipment[] {
       throw new Error();
     }
     const equipments: IEquipment[] = object.map((el: IEquipmentJson, index) => {
+      console.log(el.mandatory);
       return {
         key: index,
         type: el.type || "",

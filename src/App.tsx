@@ -72,8 +72,9 @@ function App() {
           el.sale = { price: el.sale.price };
         }
       }
-      if (el.mandatory === undefined) {
+      if (el.mandatory === false) {
         const { mandatory, ...rest } = el;
+        console.log(rest);
         el = rest;
       } else {
         el.mandatory = "1";
@@ -157,7 +158,7 @@ function App() {
   }
   return (
     <>
-      <VStack height={"100vh"} width={"100%"} px={10}>
+      <VStack height={"100vh"} width={"100%"} px={1}>
         <ButtonGroup ml={"auto"} size={"xs"} padding={"5px"}>
           <IconButton
             size={"xs"}

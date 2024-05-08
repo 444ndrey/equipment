@@ -19,7 +19,7 @@ export interface IEquipmentJson {
   name: string;
   type: string;
   description?: string;
-  mandatory?: "1";
+  mandatory?: "1" | boolean;
   rent?: {
     price: string;
     description?: string;

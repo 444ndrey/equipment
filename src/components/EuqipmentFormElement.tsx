@@ -188,6 +188,7 @@ export default function EquipmentFormElement({
           onChange={handleMandatoryChange}
           id="mandatory"
           mb={"10px"}
+          isChecked={equipment.mandatory}
         ></Checkbox>
       </HStack>
       <FormLabel fontSize={"x-small"} size={"2xs"}>
