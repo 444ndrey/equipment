@@ -1,4 +1,3 @@
-import "./App.css";
 import {
   Box,
   Button,
@@ -16,6 +15,8 @@ import { BsFillSunFill } from "react-icons/bs";
 import { FaMoon } from "react-icons/fa";
 import { IoReturnUpBack } from "react-icons/io5";
 import jsonParse from "./jsonParse";
+import Alert from "./components/Alert";
+import ModalInfo from "./components/ModalInfo";
 
 const changeStory: Array<IEquipment[]> = [];
 function App() {
@@ -26,21 +27,24 @@ function App() {
     description: "",
     sale: {
       price: "",
-      description: "",
+      comment: "",
     },
-    rent: { price: "99", description: "" },
+    rent: { price: "99", comment: "" },
     mandatory: false,
     credit: [],
   };
   const [jsonObject, setJson] = useState<IEquipment[]>([{ ...jsonTemplate }]);
   const { colorMode, toggleColorMode } = useColorMode();
+  const [isAlertErrorOpen, setIsAlertErrorOpen] = useState(false);
+  const [alertErrorMessage, setAlertErrorMessage] = useState("Ошибка");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     document.addEventListener("keydown", handelUndo);
 
     function handelUndo(event: KeyboardEvent) {
       if (event.ctrlKey && event.key == "z") {
-        restoreChanges();
+        //restoreChanges();
       }
     }
     return () => {
@@ -60,7 +64,7 @@ function App() {
         const { rent, ...rest } = el;
         el = rest;
       } else {
-        if (el.rent.description === "") {
+        if (el.rent.comment === "") {
           el.rent = { price: el.rent.price };
         }
       }
@@ -68,12 +72,13 @@ function App() {
         const { sale, ...rest } = el;
         el = rest;
       } else {
-        if (el.sale.description === "") {
+        if (el.sale.comment === "") {
           el.sale = { price: el.sale.price };
         }
       }
-      if (el.mandatory === undefined) {
+      if (el.mandatory === false) {
         const { mandatory, ...rest } = el;
+        console.log(rest);
         el = rest;
       } else {
         el.mandatory = "1";
@@ -110,12 +115,18 @@ function App() {
       })
       .catch((err) => {
         console.error("Ошибка при чтении из буфера обмена:", err);
+        showErrorAlert(`${err}`);
       });
   }
 
+  function showErrorAlert(text: string) {
+    setAlertErrorMessage(text);
+    setIsAlertErrorOpen(true);
+  }
   function handleFormChange(equips: IEquipment[]) {
     saveChanges();
     setJson([...equips]);
+    setIsAlertErrorOpen(false);
   }
   function onCopyJson() {
     saveChanges();
@@ -157,7 +168,16 @@ function App() {
   }
   return (
     <>
-      <VStack height={"100vh"} width={"100%"} px={10}>
+      <Alert
+        isShown={isAlertErrorOpen}
+        text={alertErrorMessage}
+        onClose={() => setIsAlertErrorOpen(false)}
+      ></Alert>
+      <ModalInfo
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      ></ModalInfo>
+      <VStack height={"100vh"} width={"100%"} px={1}>
         <ButtonGroup ml={"auto"} size={"xs"} padding={"5px"}>
           <IconButton
             size={"xs"}
@@ -176,6 +196,7 @@ function App() {
           >
             Очистить JSON
           </Button>
+          <Button onClick={() => setIsModalOpen(true)}>Гайд</Button>
           <IconButton
             size={"xs"}
             variant={"outline"}
@@ -187,7 +208,7 @@ function App() {
         <Flex
           flex={1}
           justifyContent={"space-between"}
-          w={"70%"}
+          w={"80%"}
           overflowY={"auto"}
           gap={"50px"}
         >
@@ -207,8 +228,8 @@ function App() {
           colorScheme="green"
           variant={"outline"}
           onClick={onCopyJson}
-          ml={"auto"}
-          w={"100%"}
+          mx={"auto"}
+          w={"80%"}
           mb={"30px"}
         >
           Скопировать JSON

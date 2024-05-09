@@ -39,7 +39,7 @@ export default function EquipmentFormElement({
   function handleRentChange(value: string) {
     const updateValue = {
       ...equipment,
-      rent: { price: value, description: equipment.rent.description },
+      rent: { price: value, comment: equipment.rent.comment },
     };
     //setEquipment(updateValue);
     onChange(updateValue);
@@ -47,7 +47,7 @@ export default function EquipmentFormElement({
   function handleRentDescriptionChange(value: string) {
     const updateValue = {
       ...equipment,
-      rent: { price: equipment.rent.price, description: value },
+      rent: { price: equipment.rent.price, comment: value },
     };
     //setEquipment(updateValue);
     onChange(updateValue);
@@ -55,7 +55,7 @@ export default function EquipmentFormElement({
   function handelChangeSale(value: string) {
     const updateValue = {
       ...equipment,
-      sale: { price: value, description: equipment.rent.description },
+      sale: { price: value, comment: equipment.rent.comment },
     };
     //setEquipment(updateValue);
     onChange(updateValue);
@@ -63,7 +63,7 @@ export default function EquipmentFormElement({
   function handelChangeSaleDescription(value: string) {
     const updateValue = {
       ...equipment,
-      sale: { price: equipment.sale.price, description: value },
+      sale: { price: equipment.sale.price, comment: value },
     };
     //setEquipment(updateValue);
     onChange(updateValue);
@@ -80,7 +80,6 @@ export default function EquipmentFormElement({
     {
       label: equipment.type,
       value: equipment.type,
-      variant: "solid",
     },
     {
       label: "Роутер",
@@ -167,6 +166,7 @@ export default function EquipmentFormElement({
           size={"sm"}
           formatCreateLabel={(val) => "Добавить " + val}
           defaultValue={equipmentTypes[0]}
+          value={{ label: equipment.type, value: equipment.type }}
           selectedOptionStyle="check"
           onChange={(v) => handleChange("type", v?.value)}
         ></CreatableSelect>
@@ -188,6 +188,7 @@ export default function EquipmentFormElement({
           onChange={handleMandatoryChange}
           id="mandatory"
           mb={"10px"}
+          isChecked={equipment.mandatory}
         ></Checkbox>
       </HStack>
       <FormLabel fontSize={"x-small"} size={"2xs"}>
@@ -217,6 +218,7 @@ export default function EquipmentFormElement({
         </InputGroup>
         <Textarea
           placeholder="Комментарий"
+          value={equipment.rent.comment}
           resize={"none"}
           size={"xs"}
           onChange={(e) => handleRentDescriptionChange(e.target.value)}
@@ -238,6 +240,7 @@ export default function EquipmentFormElement({
         </InputGroup>
         <Textarea
           placeholder="Комментарий"
+          value={equipment.sale.comment}
           resize={"none"}
           size={"xs"}
           onChange={(e) => handelChangeSaleDescription(e.target.value)}
@@ -265,6 +268,7 @@ export default function EquipmentFormElement({
         mt={"10px"}
         variant={"ghost"}
         onClick={onDel}
+        width={"100%"}
       >
         Удалить
       </Button>

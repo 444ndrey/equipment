@@ -7,7 +7,7 @@ import {
   InputRightAddon,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
-import React, { useState } from "react";
+import React from "react";
 import { IEquipmentCreditOption } from "../IEquipment";
 
 type EquipmentCreditItemProps = {
@@ -21,30 +21,25 @@ export default function EquipmentCreditItem({
   onDel,
   onChange,
 }: EquipmentCreditItemProps) {
-  const [item, setItem] = useState(equipmentCreditItem);
-
   function handleChangePrice(e: React.ChangeEvent<HTMLInputElement>) {
     const updatedItem: IEquipmentCreditOption = {
-      ...item,
+      ...equipmentCreditItem,
       price: e.target.value,
     };
-    setItem(updatedItem);
     onChange(updatedItem);
   }
   function handleChangeTime(e: React.ChangeEvent<HTMLInputElement>) {
     const updatedItem = {
-      ...item,
+      ...equipmentCreditItem,
       time: e.target.value,
     };
-    setItem(updatedItem);
     onChange(updatedItem);
   }
   function handleChangeFP(e: React.ChangeEvent<HTMLInputElement>) {
     const updatedItem = {
-      ...item,
+      ...equipmentCreditItem,
       fp: e.target.value,
     };
-    setItem(updatedItem);
     onChange(updatedItem);
   }
   return (
@@ -54,7 +49,7 @@ export default function EquipmentCreditItem({
           <InputGroup size="xs">
             <Input
               placeholder="Цена"
-              value={item.price}
+              value={equipmentCreditItem.price}
               onChange={handleChangePrice}
             ></Input>
             <InputRightAddon> руб</InputRightAddon>
@@ -63,7 +58,7 @@ export default function EquipmentCreditItem({
           <InputGroup size="xs">
             <Input
               placeholder="Месяцев"
-              value={item.time}
+              value={equipmentCreditItem.time}
               onChange={handleChangeTime}
             ></Input>
             <InputRightAddon> мес</InputRightAddon>
@@ -71,7 +66,7 @@ export default function EquipmentCreditItem({
           <InputGroup size="xs">
             <Input
               placeholder="Единоразовый платеж"
-              value={item.fp}
+              value={equipmentCreditItem.fp}
               onChange={handleChangeFP}
             ></Input>
             <InputRightAddon> единоразово</InputRightAddon>
