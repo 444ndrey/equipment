@@ -16,6 +16,7 @@ import { FaMoon } from "react-icons/fa";
 import { IoReturnUpBack } from "react-icons/io5";
 import jsonParse from "./jsonParse";
 import Alert from "./components/Alert";
+import ModalInfo from "./components/ModalInfo";
 
 const changeStory: Array<IEquipment[]> = [];
 function App() {
@@ -36,6 +37,7 @@ function App() {
   const { colorMode, toggleColorMode } = useColorMode();
   const [isAlertErrorOpen, setIsAlertErrorOpen] = useState(false);
   const [alertErrorMessage, setAlertErrorMessage] = useState("Ошибка");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     document.addEventListener("keydown", handelUndo);
@@ -171,6 +173,10 @@ function App() {
         text={alertErrorMessage}
         onClose={() => setIsAlertErrorOpen(false)}
       ></Alert>
+      <ModalInfo
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      ></ModalInfo>
       <VStack height={"100vh"} width={"100%"} px={1}>
         <ButtonGroup ml={"auto"} size={"xs"} padding={"5px"}>
           <IconButton
@@ -190,6 +196,7 @@ function App() {
           >
             Очистить JSON
           </Button>
+          <Button onClick={() => setIsModalOpen(true)}>Гайд</Button>
           <IconButton
             size={"xs"}
             variant={"outline"}
