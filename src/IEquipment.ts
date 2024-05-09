@@ -6,11 +6,11 @@ export interface IEquipment {
   mandatory: boolean;
   rent: {
     price: string;
-    description: string;
+    comment: string;
   };
   sale: {
     price: string;
-    description: string;
+    comment: string;
   };
   credit: IEquipmentCreditOption[];
 }
@@ -22,11 +22,11 @@ export interface IEquipmentJson {
   mandatory?: "1" | boolean;
   rent?: {
     price: string;
-    description?: string;
+    comment?: string;
   };
   sale?: {
     price: string;
-    description?: string;
+    comment?: string;
   };
   credit?: {
     price: string;

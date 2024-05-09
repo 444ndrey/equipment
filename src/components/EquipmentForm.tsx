@@ -1,4 +1,4 @@
-import { Button, Stack, StackDivider } from "@chakra-ui/react";
+import { Box, Button, Stack } from "@chakra-ui/react";
 import { IEquipment } from "../IEquipment";
 import EquipmentFormElement from "./EuqipmentFormElement";
 
@@ -27,14 +27,20 @@ export default function EquipmentForm({
 
   return (
     <>
-      <Stack divider={<StackDivider borderColor="gray.700" />}>
+      <Stack gap={"15px"}>
         {equips.map((eq) => (
-          <EquipmentFormElement
-            onChange={(eq) => handleChange(eq, eq.key)}
+          <Box
+            border={"1px solid #3a3b3c"}
+            p={"7px"}
+            borderRadius={"5px"}
             key={eq.key}
-            equipment={eq}
-            onDel={() => onDel(eq.key)}
-          />
+          >
+            <EquipmentFormElement
+              onChange={(eq) => handleChange(eq, eq.key)}
+              equipment={eq}
+              onDel={() => onDel(eq.key)}
+            />
+          </Box>
         ))}
       </Stack>
       <Button

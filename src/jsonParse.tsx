@@ -16,11 +16,11 @@ export default function jsonParse(json: string): IEquipment[] {
         mandatory: el.mandatory == "1" ? true : false,
         rent: {
           price: el.rent?.price || "",
-          description: el.rent?.description || "",
+          comment: el.rent?.comment || "",
         },
         sale: {
           price: el.sale?.price || "",
-          description: el.sale?.description || "",
+          comment: el.sale?.comment || "",
         },
         credit:
           el.credit?.map((cr, index) => ({
