@@ -28,12 +28,7 @@ export default function EquipmentForm({
     <>
       <Stack gap={"15px"}>
         {equips.map((eq) => (
-          <Box
-            border={"1px solid #3a3b3c"}
-            p={"7px"}
-            borderRadius={"5px"}
-            key={eq.key}
-          >
+          <Box key={eq.key}>
             <EquipmentFormElement
               onChange={(eq) => handleChange(eq, eq.key)}
               equipment={eq}

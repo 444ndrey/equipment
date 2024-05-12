@@ -160,16 +160,42 @@ export default function EquipmentFormElement({
     //setEquipment(updateValue);
     onChange(updateValue);
   }
+  function getColor(key: number): string {
+    const colors: string[] = [
+      "#3a3b3c", // Дефолтный
+      "#FFA07A", // Красный
+      "#00CED1", // Циан
+      "#7CFC00", // Жёлто-зелёный
+      "#FFD700", // Золотой
+      "#8A2BE2", // Фиолетовый
+      "#FFB6C1", // Розовый
+      "#32CD32", // Весенне-зелёный
+      "#FF8C00", // Оранжевый
+      "#20B2AA", // Турецкий
+      "#FF7F50", // Огненно-красный
+      "#4682B4", // Королевский синий
+      "#FFA500", // Тыквенный
+      "#0000FF", // Синий
+      "#800080", // Пурпурный
+      "#008080", // Тёмно-зелёный
+      "#DC143C", // Карминный
+      "#FF1493", // Глициния
+    ];
+    return colors[key + 1] || colors[0];
+  }
 
   return (
     <>
       <Box
+        p={"7px"}
         boxShadow={
           isDanger == true
-            ? "-1px -60px 107px -37px rgba(222,105,105,0.97) inset"
+            ? "-1px -60px 107px -37px rgba(222,105,105,0.8) inset"
             : ""
         }
-        transition={"ease-in-out .2s"}
+        transition={"ease-in-out .3s"}
+        border={`1px solid ${getColor(equipment.key)}`}
+        borderRadius={"5px"}
       >
         <FormControl variant="floating" gap={"40px"}>
           <FormLabel fontSize={"x-small"} size={"2xs"}>
