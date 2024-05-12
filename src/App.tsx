@@ -6,9 +6,10 @@ import {
   IconButton,
   VStack,
   useColorMode,
+  Text,
 } from "@chakra-ui/react";
 import CodeEditor from "./components/CodeEditor";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import EquipmentForm from "./components/EquipmentForm";
 import { IEquipment, IEquipmentJson } from "./IEquipment";
 import { BsFillSunFill } from "react-icons/bs";
@@ -38,19 +39,8 @@ function App() {
   const [isAlertErrorOpen, setIsAlertErrorOpen] = useState(false);
   const [alertErrorMessage, setAlertErrorMessage] = useState("Ошибка");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    document.addEventListener("keydown", handelUndo);
-
-    function handelUndo(event: KeyboardEvent) {
-      if (event.ctrlKey && event.key == "z") {
-        //restoreChanges();
-      }
-    }
-    return () => {
-      document.removeEventListener("keydown", handelUndo);
-    };
-  }, []);
+  const [isCodeValid, setisCodeValid] = useState(true);
+  const [isCopied, setIsCopied] = useState(false);
 
   function filterJson(equips: IEquipment[]): IEquipmentJson[] {
     const objs = equips.map((el: IEquipmentJson) => {
@@ -78,7 +68,6 @@ function App() {
       }
       if (el.mandatory === false) {
         const { mandatory, ...rest } = el;
-        console.log(rest);
         el = rest;
       } else {
         el.mandatory = "1";
@@ -105,13 +94,15 @@ function App() {
     return objs;
   }
 
-  function onPast() {
+  function handlePast() {
     saveChanges();
     navigator.clipboard
       .readText()
       .then((text) => {
         const json = jsonParse(text);
-        setJson(json);
+        if (json) {
+          setJson(json);
+        }
       })
       .catch((err) => {
         console.error("Ошибка при чтении из буфера обмена:", err);
@@ -119,6 +110,19 @@ function App() {
       });
   }
 
+  function handleEditorChange(json: string) {
+    saveChanges();
+    try {
+      const equipment = jsonParse(json);
+      setisCodeValid(true);
+      if (equipment) {
+        setJson(equipment);
+      }
+    } catch (error) {
+      showErrorAlert(`Ошибка при попытке заполнить форму: ${error}`);
+      console.error(error);
+    }
+  }
   function showErrorAlert(text: string) {
     setAlertErrorMessage(text);
     setIsAlertErrorOpen(true);
@@ -127,18 +131,6 @@ function App() {
     saveChanges();
     setJson([...equips]);
     setIsAlertErrorOpen(false);
-  }
-  function onCopyJson() {
-    saveChanges();
-    const string = JSON.stringify(filterJson(jsonObject), null, 0);
-    navigator.clipboard
-      .writeText(string)
-      .then(() => {
-        console.log("JSON успешно скопирован в буфер обмена");
-      })
-      .catch((err) => {
-        console.error("Не удалось скопировать JSON в буфер обмена: ", err);
-      });
   }
   function handleAdd() {
     saveChanges();
@@ -151,6 +143,24 @@ function App() {
     const temp = jsonObject.filter((item) => item.key !== key);
     setJson(temp);
   }
+  async function copyJson(str: string) {
+    saveChanges();
+    navigator.clipboard
+      .writeText(str)
+      .then(() => {
+        console.log("JSON успешно скопирован в буфер обмена");
+      })
+      .catch((err) => {
+        console.error("Не удалось скопировать JSON в буфер обмена: ", err);
+      });
+  }
+  function handleCopyJson() {
+    const string = JSON.stringify(filterJson(jsonObject), null, 0);
+    copyJson(string).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 700);
+    });
+  }
 
   function saveChanges() {
     const jsonCopy = JSON.parse(JSON.stringify(jsonObject));
@@ -161,9 +171,20 @@ function App() {
   }
   function restoreChanges() {
     if (changeStory.length > 0) {
-      console.log("restored");
+      setisCodeValid(true);
       setJson(changeStory[0]);
       changeStory.shift();
+    }
+  }
+  function handleCopyEditorCode(str: string) {
+    try {
+      const obj = JSON.parse(str);
+      const string = JSON.stringify(obj, null, 0);
+      copyJson(string);
+    } catch (error) {
+      showErrorAlert(
+        `Не удалось скопировать JSON из редактора в буфер обмена: ${error}`
+      );
     }
   }
   return (
@@ -177,17 +198,15 @@ function App() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       ></ModalInfo>
-      <VStack height={"100vh"} width={"100%"} px={1}>
+      <VStack
+        height={"100vh"}
+        width={"100%"}
+        px={"10px"}
+        pb={"10px"}
+        overflowY={"hidden"}
+      >
         <ButtonGroup ml={"auto"} size={"xs"} padding={"5px"}>
-          <IconButton
-            size={"xs"}
-            variant={"outline"}
-            aria-label={colorMode == "light" ? "light" : "dark"}
-            onClick={restoreChanges}
-            icon={<IoReturnUpBack />}
-            isDisabled={changeStory.length < 1}
-          />
-          <Button onClick={onPast}>Распарсить скопированный JSON</Button>
+          <Button onClick={handlePast}>Распарсить скопированный JSON</Button>
           <Button
             onClick={() => {
               saveChanges();
@@ -208,33 +227,57 @@ function App() {
         <Flex
           flex={1}
           justifyContent={"space-between"}
+          h={"100%"}
           w={"80%"}
-          overflowY={"auto"}
+          overflowY={"scroll"}
           gap={"50px"}
         >
-          <Box flex={1}>
-            <EquipmentForm
-              equips={jsonObject}
-              onChange={handleFormChange}
-              onAdd={handleAdd}
-              onDel={handelDel}
-            ></EquipmentForm>
-          </Box>
-          <Box flex={1}>
-            <CodeEditor json={filterJson(jsonObject)}></CodeEditor>
+          <VStack flex={1}>
+            <ButtonGroup size={"xs"} mb={"10x"} ml={"auto"}>
+              <IconButton
+                variant={"outline"}
+                aria-label={colorMode == "light" ? "light" : "dark"}
+                onClick={restoreChanges}
+                icon={<IoReturnUpBack />}
+                isDisabled={changeStory.length < 1}
+              />
+            </ButtonGroup>
+            <Box width={"100%"}>
+              {isCodeValid ? (
+                <EquipmentForm
+                  equips={jsonObject}
+                  onChange={handleFormChange}
+                  onAdd={handleAdd}
+                  onDel={handelDel}
+                ></EquipmentForm>
+              ) : (
+                <Text color={"red"}>
+                  Ошибка в коде JSON. Невозможно заполнить форму. Нужно
+                  исправить ошибку вручную.
+                </Text>
+              )}
+            </Box>
+          </VStack>
+          <Box flex={1} height={"100%"}>
+            <CodeEditor
+              equipment={filterJson(jsonObject)}
+              editorTheme={colorMode}
+              // onSetupFormClick={(str) => handleSetupFormClick(str)}
+              onSetupFormClick={(str) => handleEditorChange(str)}
+              onCopyClick={handleCopyEditorCode}
+            ></CodeEditor>
           </Box>
         </Flex>
         <Button
           colorScheme="green"
-          variant={"outline"}
-          onClick={onCopyJson}
-          mx={"auto"}
-          w={"80%"}
-          mb={"30px"}
+          transition={"ease-in-out .3s"}
+          variant={isCopied ? "solid" : "outline"}
+          onClick={handleCopyJson}
+          w={"30%"}
+          mb={"20px"}
         >
-          Скопировать JSON
+          {isCopied ? "✓" : "Скопировать JSON из формы"}
         </Button>
-        <Box bg={"orange"}></Box>
       </VStack>
     </>
   );

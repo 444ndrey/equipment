@@ -1,6 +1,6 @@
 import { IEquipment, IEquipmentJson } from "./IEquipment";
 
-export default function jsonParse(json: string): IEquipment[] {
+export default function jsonParse(json: string): IEquipment[] | null {
   try {
     const object: [] = JSON.parse(json);
     if (!Array.isArray(object)) {

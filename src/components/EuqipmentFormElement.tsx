@@ -90,6 +90,10 @@ export default function EquipmentFormElement({
       value: "ТВ-приставка",
     },
     {
+      label: "IPTV-приставка",
+      value: "IPTV-приставка",
+    },
+    {
       label: "ONT-модем",
       value: "ONT-модем",
     },
