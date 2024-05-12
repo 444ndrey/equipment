@@ -24,7 +24,6 @@ export default function EquipmentForm({
     });
     onChange(updatedList);
   }
-
   return (
     <>
       <Stack gap={"15px"}>
