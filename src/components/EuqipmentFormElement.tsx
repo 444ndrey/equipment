@@ -8,12 +8,15 @@ import {
   Checkbox,
   Button,
   HStack,
+  Box,
 } from "@chakra-ui/react";
 import { CreatableSelect } from "chakra-react-select";
 // import { useState } from "react";
 import { IEquipment } from "../IEquipment";
 import EquipmentCreditItem from "./EquipmentCreditItem";
 import { IEquipmentCreditOption } from "../IEquipment";
+import { useState } from "react";
+import "./EquipmentFormElement.css";
 
 type EquipmentFormElementProps = {
   equipment: IEquipment;
@@ -27,6 +30,8 @@ export default function EquipmentFormElement({
   onDel,
 }: EquipmentFormElementProps) {
   // const [equipment, setEquipment] = useState<IEquipment>({ ...equip });
+  const [isDanger, setIsDanger] = useState(false);
+  const [isRemovingAnimation, setIsRemovingAnimation] = useState(false);
   function handleChange(name: string, value: string | undefined) {
     const updateValue = {
       ...equipment,
@@ -75,6 +80,20 @@ export default function EquipmentFormElement({
     };
     //setEquipment(updateValue);
     onChange(updateValue);
+  }
+
+  async function addAnimation() {
+    setIsRemovingAnimation(true);
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        setIsRemovingAnimation(false);
+        resolve(null);
+      }, 300);
+    });
+  }
+
+  function handleDel() {
+    addAnimation().then(() => onDel());
   }
   const equipmentTypes = [
     {
@@ -157,125 +176,165 @@ export default function EquipmentFormElement({
     //setEquipment(updateValue);
     onChange(updateValue);
   }
+  function getColor(key: number): string {
+    const colors: string[] = [
+      "#3a3b3c", // Дефолтный
+      "#FFC8B4", // Красный
+      "#AEEEEE", // Циан
+      "#DFFFBF", // Жёлто-зелёный
+      "#FFEC8B", // Золотой
+      "#D8BFD8", // Фиолетовый
+      "#FFDAB9", // Розовый
+      "#98FB98", // Весенне-зелёный
+      "#FFDAB9", // Оранжевый
+      "#AFEEEE", // Турецкий
+      "#FFD700", // Огненно-красный
+      "#B0C4DE", // Королевский синий
+      "#F5DEB3", // Тыквенный
+      "#0000FF", // Синий
+      "#800080", // Пурпурный
+      "#008080", // Тёмно-зелёный
+      "#DC143C", // Карминный
+      "#FF1493", // Глициния
+    ];
+    return colors[key + 1] || colors[0];
+  }
 
   return (
     <>
-      <FormControl variant="floating" gap={"40px"}>
-        <FormLabel fontSize={"x-small"} size={"2xs"}>
-          Тип оборудования
-        </FormLabel>
-        <CreatableSelect
-          options={equipmentTypes}
-          placeholder="Тип обордования"
-          size={"sm"}
-          formatCreateLabel={(val) => "Добавить " + val}
-          defaultValue={equipmentTypes[0]}
-          value={{ label: equipment.type, value: equipment.type }}
-          selectedOptionStyle="check"
-          onChange={(v) => handleChange("type", v?.value)}
-        ></CreatableSelect>
-      </FormControl>
-      <FormLabel fontSize={"x-small"} size={"2xs"}>
-        Название
-      </FormLabel>
-      <Input
-        size={"sm"}
-        placeholder="Название"
-        value={equipment.name}
-        onChange={(v) => handleChange("name", v.target.value)}
-      ></Input>
-      <HStack mt={"10px"}>
-        <FormLabel htmlFor="mandatory" fontSize={"x-small"} size={"2xs"}>
-          Обязательный:
-        </FormLabel>
-        <Checkbox
-          onChange={handleMandatoryChange}
-          id="mandatory"
-          mb={"10px"}
-          isChecked={equipment.mandatory}
-        ></Checkbox>
-      </HStack>
-      <FormLabel fontSize={"x-small"} size={"2xs"}>
-        Описание:
-      </FormLabel>
-      <Textarea
-        size={"sm"}
-        placeholder="Описание"
-        value={equipment.description}
-        onChange={(v) => handleChange("description", v.target.value)}
-        resize={"none"}
-      ></Textarea>
-      <FormLabel htmlFor="rent-price" size={"2xs"} fontSize={"x-small"}>
-        Аренда:
-      </FormLabel>
-      <HStack>
-        <InputGroup size={"sm"}>
-          <InputLeftElement pointerEvents="none" color="gray.300">
-            ₽
-          </InputLeftElement>
-          <Input
-            id="rent-price"
-            value={equipment.rent.price}
-            placeholder="Стоимость аренды"
-            onChange={(e) => handleRentChange(e.target.value)}
-          />
-        </InputGroup>
-        <Textarea
-          placeholder="Комментарий"
-          value={equipment.rent.comment}
-          resize={"none"}
-          size={"xs"}
-          onChange={(e) => handleRentDescriptionChange(e.target.value)}
-        ></Textarea>
-      </HStack>
-      <FormLabel size={"2xs"} fontSize={"x-small"}>
-        Покупка:
-      </FormLabel>
-      <HStack>
-        <InputGroup size={"sm"}>
-          <InputLeftElement pointerEvents="none" color="gray.300">
-            ₽
-          </InputLeftElement>
-          <Input
-            value={equipment.sale.price}
-            onChange={(e) => handelChangeSale(e.target.value)}
-            placeholder="Стоимость выкупа"
-          />
-        </InputGroup>
-        <Textarea
-          placeholder="Комментарий"
-          value={equipment.sale.comment}
-          resize={"none"}
-          size={"xs"}
-          onChange={(e) => handelChangeSaleDescription(e.target.value)}
-        ></Textarea>
-      </HStack>
-      <FormLabel size={"2xs"} fontSize={"x-small"}>
-        Рассрочка:
-      </FormLabel>
-      <div>
-        {equipment.credit.map((el) => (
-          <EquipmentCreditItem
-            key={el.key}
-            equipmentCreditItem={el}
-            onChange={(item) => handelChangeCredit(item)}
-            onDel={() => handelDelCredit(el.key)}
-          ></EquipmentCreditItem>
-        ))}
-        <Button size={"xs"} mt="5px" onClick={handleAddCreditOption}>
-          Добавить рассрочку
-        </Button>
-      </div>
-      <Button
-        colorScheme="red"
-        size={"xs"}
-        mt={"10px"}
-        variant={"ghost"}
-        onClick={onDel}
-        width={"100%"}
+      <Box
+        p={"7px"}
+        boxShadow={
+          isDanger == true
+            ? "-1px -60px 107px -37px rgba(222,105,105,0.8) inset"
+            : ""
+        }
+        transition={"ease-in-out .3s"}
+        border={`1px solid ${getColor(equipment.key)}`}
+        borderRadius={"5px"}
+        className={
+          isRemovingAnimation == true ? "animation-transition-out" : ""
+        }
       >
-        Удалить
-      </Button>
+        <FormControl variant="floating" gap={"40px"}>
+          <FormLabel fontSize={"x-small"} size={"2xs"}>
+            Тип оборудования
+          </FormLabel>
+          <CreatableSelect
+            options={equipmentTypes}
+            placeholder="Тип обордования"
+            size={"sm"}
+            formatCreateLabel={(val) => "Добавить " + val}
+            defaultValue={equipmentTypes[0]}
+            value={{ label: equipment.type, value: equipment.type }}
+            selectedOptionStyle="check"
+            onChange={(v) => handleChange("type", v?.value)}
+          ></CreatableSelect>
+        </FormControl>
+        <FormLabel fontSize={"x-small"} size={"2xs"}>
+          Название
+        </FormLabel>
+        <Input
+          size={"sm"}
+          placeholder="Название"
+          value={equipment.name}
+          onChange={(v) => handleChange("name", v.target.value)}
+        ></Input>
+        <HStack mt={"10px"}>
+          <FormLabel htmlFor="mandatory" fontSize={"x-small"} size={"2xs"}>
+            Обязательный:
+          </FormLabel>
+          <Checkbox
+            onChange={handleMandatoryChange}
+            id="mandatory"
+            mb={"10px"}
+            isChecked={equipment.mandatory}
+          ></Checkbox>
+        </HStack>
+        <FormLabel fontSize={"x-small"} size={"2xs"}>
+          Описание:
+        </FormLabel>
+        <Textarea
+          size={"sm"}
+          placeholder="Описание"
+          value={equipment.description}
+          onChange={(v) => handleChange("description", v.target.value)}
+          resize={"none"}
+        ></Textarea>
+        <FormLabel htmlFor="rent-price" size={"2xs"} fontSize={"x-small"}>
+          Аренда:
+        </FormLabel>
+        <HStack>
+          <InputGroup size={"sm"}>
+            <InputLeftElement pointerEvents="none" color="gray.300">
+              ₽
+            </InputLeftElement>
+            <Input
+              id="rent-price"
+              value={equipment.rent.price}
+              placeholder="Стоимость аренды"
+              onChange={(e) => handleRentChange(e.target.value)}
+            />
+          </InputGroup>
+          <Textarea
+            placeholder="Комментарий"
+            value={equipment.rent.comment}
+            resize={"none"}
+            size={"xs"}
+            onChange={(e) => handleRentDescriptionChange(e.target.value)}
+          ></Textarea>
+        </HStack>
+        <FormLabel size={"2xs"} fontSize={"x-small"}>
+          Покупка:
+        </FormLabel>
+        <HStack>
+          <InputGroup size={"sm"}>
+            <InputLeftElement pointerEvents="none" color="gray.300">
+              ₽
+            </InputLeftElement>
+            <Input
+              value={equipment.sale.price}
+              onChange={(e) => handelChangeSale(e.target.value)}
+              placeholder="Стоимость выкупа"
+            />
+          </InputGroup>
+          <Textarea
+            placeholder="Комментарий"
+            value={equipment.sale.comment}
+            resize={"none"}
+            size={"xs"}
+            onChange={(e) => handelChangeSaleDescription(e.target.value)}
+          ></Textarea>
+        </HStack>
+        <FormLabel size={"2xs"} fontSize={"x-small"}>
+          Рассрочка:
+        </FormLabel>
+        <div>
+          {equipment.credit.map((el) => (
+            <EquipmentCreditItem
+              key={el.key}
+              equipmentCreditItem={el}
+              onChange={(item) => handelChangeCredit(item)}
+              onDel={() => handelDelCredit(el.key)}
+            ></EquipmentCreditItem>
+          ))}
+          <Button size={"xs"} mt="5px" onClick={handleAddCreditOption}>
+            Добавить рассрочку
+          </Button>
+        </div>
+        <Button
+          colorScheme="red"
+          size={"xs"}
+          mt={"10px"}
+          variant={"ghost"}
+          onClick={handleDel}
+          width={"100%"}
+          onMouseEnter={() => setIsDanger(true)}
+          onMouseLeave={() => setIsDanger(false)}
+        >
+          Удалить
+        </Button>
+      </Box>
     </>
   );
 }

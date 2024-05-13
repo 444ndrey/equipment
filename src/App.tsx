@@ -140,6 +140,7 @@ function App() {
     setJson(temp);
   }
   function handelDel(key: number) {
+    saveChanges();
     const temp = jsonObject.filter((item) => item.key !== key);
     setJson(temp);
   }
@@ -187,6 +188,7 @@ function App() {
       );
     }
   }
+
   return (
     <>
       <Alert

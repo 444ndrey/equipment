@@ -1,0 +1,5 @@
+.animation-transition-out {
+  transition: ease-in-out 0.3s;
+  transform: translateX("-10px");
+  opacity: 0;
+}
