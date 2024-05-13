@@ -16,6 +16,7 @@ import { IEquipment } from "../IEquipment";
 import EquipmentCreditItem from "./EquipmentCreditItem";
 import { IEquipmentCreditOption } from "../IEquipment";
 import { useState } from "react";
+import "./EquipmentFormElement.css";
 
 type EquipmentFormElementProps = {
   equipment: IEquipment;
@@ -30,6 +31,7 @@ export default function EquipmentFormElement({
 }: EquipmentFormElementProps) {
   // const [equipment, setEquipment] = useState<IEquipment>({ ...equip });
   const [isDanger, setIsDanger] = useState(false);
+  const [isRemovingAnimation, setIsRemovingAnimation] = useState(false);
   function handleChange(name: string, value: string | undefined) {
     const updateValue = {
       ...equipment,
@@ -78,6 +80,20 @@ export default function EquipmentFormElement({
     };
     //setEquipment(updateValue);
     onChange(updateValue);
+  }
+
+  async function addAnimation() {
+    setIsRemovingAnimation(true);
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        setIsRemovingAnimation(false);
+        resolve(null);
+      }, 300);
+    });
+  }
+
+  function handleDel() {
+    addAnimation().then(() => onDel());
   }
   const equipmentTypes = [
     {
@@ -196,6 +212,9 @@ export default function EquipmentFormElement({
         transition={"ease-in-out .3s"}
         border={`1px solid ${getColor(equipment.key)}`}
         borderRadius={"5px"}
+        className={
+          isRemovingAnimation == true ? "animation-transition-out" : ""
+        }
       >
         <FormControl variant="floating" gap={"40px"}>
           <FormLabel fontSize={"x-small"} size={"2xs"}>
@@ -308,7 +327,7 @@ export default function EquipmentFormElement({
           size={"xs"}
           mt={"10px"}
           variant={"ghost"}
-          onClick={onDel}
+          onClick={handleDel}
           width={"100%"}
           onMouseEnter={() => setIsDanger(true)}
           onMouseLeave={() => setIsDanger(false)}
