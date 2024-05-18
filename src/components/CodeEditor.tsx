@@ -79,8 +79,10 @@ export default function CodeEditor({
         flexDirection={"column"}
         justifyContent={"space-between"}
       >
-        <ButtonGroup mb={"10px"} isDisabled={markers.length > 0} size={"xs"}>
-          <Button onClick={handleClick}>Заполнить форму</Button>
+        <ButtonGroup mb={"10px"} size={"xs"}>
+          <Button onClick={handleClick} isDisabled={markers.length > 0}>
+            Заполнить форму
+          </Button>
           <IconButton
             onClick={handleCopyClick}
             aria-label="Copy"
