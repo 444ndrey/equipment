@@ -188,6 +188,17 @@ function App() {
       );
     }
   }
+  function handleMoveUp(index: number) {
+    if (index === 0) {
+      return;
+    }
+    const newItems = [...jsonObject];
+    [newItems[index - 1], newItems[index]] = [
+      newItems[index],
+      newItems[index - 1],
+    ];
+    setJson(newItems);
+  }
 
   return (
     <>
@@ -251,6 +262,7 @@ function App() {
                   onChange={handleFormChange}
                   onAdd={handleAdd}
                   onDel={handelDel}
+                  onMoveUp={handleMoveUp}
                 ></EquipmentForm>
               ) : (
                 <Text color={"red"}>
