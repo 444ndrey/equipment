@@ -7,6 +7,7 @@ type EquipmentFormProps = {
   onChange: (equip: IEquipment[]) => void;
   onAdd: () => void;
   onDel: (key: number) => void;
+  onMoveUp: (index: number) => void;
 };
 
 export default function EquipmentForm({
@@ -14,6 +15,7 @@ export default function EquipmentForm({
   onChange,
   onAdd,
   onDel,
+  onMoveUp,
 }: EquipmentFormProps) {
   function handleChange(eq: IEquipment, key: number) {
     const updatedList = equips.map((item) => {
@@ -27,12 +29,14 @@ export default function EquipmentForm({
   return (
     <>
       <Stack gap={"15px"}>
-        {equips.map((eq) => (
+        {equips.map((eq, index) => (
           <Box key={eq.key}>
             <EquipmentFormElement
               onChange={(eq) => handleChange(eq, eq.key)}
               equipment={eq}
               onDel={() => onDel(eq.key)}
+              onMoveUp={() => onMoveUp(index)}
+              index={index}
             />
           </Box>
         ))}

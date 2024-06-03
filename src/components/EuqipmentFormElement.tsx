@@ -9,6 +9,7 @@ import {
   Button,
   HStack,
   Box,
+  IconButton,
 } from "@chakra-ui/react";
 import { CreatableSelect } from "chakra-react-select";
 // import { useState } from "react";
@@ -17,17 +18,22 @@ import EquipmentCreditItem from "./EquipmentCreditItem";
 import { IEquipmentCreditOption } from "../IEquipment";
 import { useState } from "react";
 import "./EquipmentFormElement.css";
+import { FaArrowUp } from "react-icons/fa";
 
 type EquipmentFormElementProps = {
   equipment: IEquipment;
   onChange: (equip: IEquipment) => void;
   onDel: () => void;
+  onMoveUp: () => void;
+  index: number;
 };
 
 export default function EquipmentFormElement({
   equipment,
   onChange,
   onDel,
+  onMoveUp,
+  index,
 }: EquipmentFormElementProps) {
   // const [equipment, setEquipment] = useState<IEquipment>({ ...equip });
   const [isDanger, setIsDanger] = useState(false);
@@ -201,8 +207,20 @@ export default function EquipmentFormElement({
   }
 
   return (
-    <>
+    <Box
+      display={"flex"}
+      className={isRemovingAnimation == true ? "animation-transition-out" : ""}
+    >
+      <IconButton
+        aria-label="up"
+        variant={"link"}
+        size={"sm"}
+        icon={<FaArrowUp />}
+        onClick={onMoveUp}
+        isDisabled={index === 0}
+      ></IconButton>
       <Box
+        flex={1}
         p={"7px"}
         boxShadow={
           isDanger == true
@@ -212,9 +230,6 @@ export default function EquipmentFormElement({
         transition={"ease-in-out .3s"}
         border={`1px solid ${getColor(equipment.key)}`}
         borderRadius={"5px"}
-        className={
-          isRemovingAnimation == true ? "animation-transition-out" : ""
-        }
       >
         <FormControl variant="floating" gap={"40px"}>
           <FormLabel fontSize={"x-small"} size={"2xs"}>
@@ -335,7 +350,7 @@ export default function EquipmentFormElement({
           Удалить
         </Button>
       </Box>
-    </>
+    </Box>
   );
 }
 
