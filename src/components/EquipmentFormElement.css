@@ -3,3 +3,20 @@
   transform: translateX("-10px");
   opacity: 0;
 }
+
+.animation-moved-up {
+  transition: ease-in-out 1s;
+  animation: moveUp 2s;
+}
+
+@keyframes moveUp {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-400px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

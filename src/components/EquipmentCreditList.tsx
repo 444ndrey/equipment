@@ -31,13 +31,6 @@ export default function EquipmentCreditList({
     onChange(list);
   }
 
-  // function addKeysToList(list: equipmentCreditElement[]) {
-  //   return (
-  //     list.map((item, index) => {
-  //       return { value: { ...item }, key: index };
-  //     }) || []
-  //   );
-  // }
   return (
     <>
       <Flex flexDirection={"column"} ml={"10px"}>
