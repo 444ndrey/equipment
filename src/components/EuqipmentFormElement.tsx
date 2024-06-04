@@ -243,7 +243,7 @@ export default function EquipmentFormElement({
           <CreatableSelect
             options={equipmentTypes}
             placeholder="Тип обордования"
-            size={"xs"}
+            size={"sm"}
             formatCreateLabel={(val) => "Добавить " + val}
             defaultValue={equipmentTypes[0]}
             value={{ label: equipment.type, value: equipment.type }}
