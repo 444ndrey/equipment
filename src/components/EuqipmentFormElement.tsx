@@ -38,6 +38,7 @@ export default function EquipmentFormElement({
   // const [equipment, setEquipment] = useState<IEquipment>({ ...equip });
   const [isDanger, setIsDanger] = useState(false);
   const [isRemovingAnimation, setIsRemovingAnimation] = useState(false);
+  const [isMovedAnimation, setIsMovedAnimation] = useState(false);
   function handleChange(name: string, value: string | undefined) {
     const updateValue = {
       ...equipment,
@@ -88,7 +89,7 @@ export default function EquipmentFormElement({
     onChange(updateValue);
   }
 
-  async function addAnimation() {
+  async function addRemoveAnimation() {
     setIsRemovingAnimation(true);
     await new Promise((resolve) => {
       setTimeout(() => {
@@ -98,8 +99,21 @@ export default function EquipmentFormElement({
     });
   }
 
+  async function addMoveUpAnimation() {
+    setIsMovedAnimation(true);
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        setIsMovedAnimation(false);
+        resolve(null);
+      }, 300);
+    });
+  }
+
+  function handleMoveUp() {
+    addMoveUpAnimation().then(() => onMoveUp());
+  }
   function handleDel() {
-    addAnimation().then(() => onDel());
+    addRemoveAnimation().then(() => onDel());
   }
   const equipmentTypes = [
     {
@@ -135,14 +149,6 @@ export default function EquipmentFormElement({
       value: "CAM-модуль",
     },
   ];
-
-  // function onNumberChange(e: ChangeEvent<HTMLInputElement>) {
-  //   const re = /^[0-9\b]+$/;
-  //   if (e.target.value === "" || re.test(e.target.value)) {
-  //     console.log(e.target.value);
-  //     setEquipment({ ...equipment, rent: { price: e.target.value } });
-  //   }
-  // }
   function handleAddCreditOption() {
     const credit = [...(equipment.credit || [])];
     credit.push({
@@ -155,7 +161,6 @@ export default function EquipmentFormElement({
       ...equipment,
       credit: credit,
     };
-    //setEquipment(updateValue);
     onChange(updateValue);
   }
   function handelChangeCredit(item: IEquipmentCreditOption) {
@@ -169,7 +174,6 @@ export default function EquipmentFormElement({
         ...equipment,
         credit: copyList,
       };
-      //setEquipment(updateValue);
       onChange(updateValue);
     }
   }
@@ -179,7 +183,6 @@ export default function EquipmentFormElement({
       ...equipment,
       credit: creditList,
     };
-    //setEquipment(updateValue);
     onChange(updateValue);
   }
   function getColor(key: number): string {
@@ -209,14 +212,16 @@ export default function EquipmentFormElement({
   return (
     <Box
       display={"flex"}
-      className={isRemovingAnimation == true ? "animation-transition-out" : ""}
+      className={`${
+        isRemovingAnimation == true ? "animation-transition-out" : ""
+      } ${isMovedAnimation == true ? "animation-moved-up" : ""} `}
     >
       <IconButton
         aria-label="up"
         variant={"link"}
         size={"sm"}
         icon={<FaArrowUp />}
-        onClick={onMoveUp}
+        onClick={handleMoveUp}
         isDisabled={index === 0}
       ></IconButton>
       <Box
@@ -238,7 +243,7 @@ export default function EquipmentFormElement({
           <CreatableSelect
             options={equipmentTypes}
             placeholder="Тип обордования"
-            size={"sm"}
+            size={"xs"}
             formatCreateLabel={(val) => "Добавить " + val}
             defaultValue={equipmentTypes[0]}
             value={{ label: equipment.type, value: equipment.type }}
@@ -250,7 +255,7 @@ export default function EquipmentFormElement({
           Название
         </FormLabel>
         <Input
-          size={"sm"}
+          size={"xs"}
           placeholder="Название"
           value={equipment.name}
           onChange={(v) => handleChange("name", v.target.value)}
@@ -270,17 +275,18 @@ export default function EquipmentFormElement({
           Описание:
         </FormLabel>
         <Textarea
-          size={"sm"}
+          size={"xs"}
           placeholder="Описание"
           value={equipment.description}
           onChange={(v) => handleChange("description", v.target.value)}
           resize={"none"}
+          rows={3}
         ></Textarea>
         <FormLabel htmlFor="rent-price" size={"2xs"} fontSize={"x-small"}>
           Аренда:
         </FormLabel>
         <HStack>
-          <InputGroup size={"sm"}>
+          <InputGroup size={"xs"}>
             <InputLeftElement pointerEvents="none" color="gray.300">
               ₽
             </InputLeftElement>
@@ -297,13 +303,14 @@ export default function EquipmentFormElement({
             resize={"none"}
             size={"xs"}
             onChange={(e) => handleRentDescriptionChange(e.target.value)}
+            rows={2}
           ></Textarea>
         </HStack>
         <FormLabel size={"2xs"} fontSize={"x-small"}>
           Покупка:
         </FormLabel>
         <HStack>
-          <InputGroup size={"sm"}>
+          <InputGroup size={"xs"}>
             <InputLeftElement pointerEvents="none" color="gray.300">
               ₽
             </InputLeftElement>
@@ -319,6 +326,7 @@ export default function EquipmentFormElement({
             resize={"none"}
             size={"xs"}
             onChange={(e) => handelChangeSaleDescription(e.target.value)}
+            rows={2}
           ></Textarea>
         </HStack>
         <FormLabel size={"2xs"} fontSize={"x-small"}>

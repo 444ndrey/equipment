@@ -189,6 +189,7 @@ function App() {
     }
   }
   function handleMoveUp(index: number) {
+    saveChanges();
     if (index === 0) {
       return;
     }
