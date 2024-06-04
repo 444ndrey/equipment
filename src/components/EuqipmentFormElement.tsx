@@ -243,7 +243,7 @@ export default function EquipmentFormElement({
           <CreatableSelect
             options={equipmentTypes}
             placeholder="Тип обордования"
-            size={"sm"}
+            size={"xs"}
             formatCreateLabel={(val) => "Добавить " + val}
             defaultValue={equipmentTypes[0]}
             value={{ label: equipment.type, value: equipment.type }}
@@ -255,7 +255,7 @@ export default function EquipmentFormElement({
           Название
         </FormLabel>
         <Input
-          size={"sm"}
+          size={"xs"}
           placeholder="Название"
           value={equipment.name}
           onChange={(v) => handleChange("name", v.target.value)}
@@ -275,17 +275,18 @@ export default function EquipmentFormElement({
           Описание:
         </FormLabel>
         <Textarea
-          size={"sm"}
+          size={"xs"}
           placeholder="Описание"
           value={equipment.description}
           onChange={(v) => handleChange("description", v.target.value)}
           resize={"none"}
+          rows={3}
         ></Textarea>
         <FormLabel htmlFor="rent-price" size={"2xs"} fontSize={"x-small"}>
           Аренда:
         </FormLabel>
         <HStack>
-          <InputGroup size={"sm"}>
+          <InputGroup size={"xs"}>
             <InputLeftElement pointerEvents="none" color="gray.300">
               ₽
             </InputLeftElement>
@@ -302,13 +303,14 @@ export default function EquipmentFormElement({
             resize={"none"}
             size={"xs"}
             onChange={(e) => handleRentDescriptionChange(e.target.value)}
+            rows={2}
           ></Textarea>
         </HStack>
         <FormLabel size={"2xs"} fontSize={"x-small"}>
           Покупка:
         </FormLabel>
         <HStack>
-          <InputGroup size={"sm"}>
+          <InputGroup size={"xs"}>
             <InputLeftElement pointerEvents="none" color="gray.300">
               ₽
             </InputLeftElement>
@@ -324,6 +326,7 @@ export default function EquipmentFormElement({
             resize={"none"}
             size={"xs"}
             onChange={(e) => handelChangeSaleDescription(e.target.value)}
+            rows={2}
           ></Textarea>
         </HStack>
         <FormLabel size={"2xs"} fontSize={"x-small"}>
