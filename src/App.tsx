@@ -18,6 +18,7 @@ import { IoReturnUpBack } from "react-icons/io5";
 import jsonParse from "./jsonParse";
 import Alert from "./components/Alert";
 import ModalInfo from "./components/ModalInfo";
+// import { FaGithub } from "react-icons/fa";
 
 const changeStory: Array<IEquipment[]> = [];
 function App() {
@@ -134,9 +135,12 @@ function App() {
   }
   function handleAdd() {
     saveChanges();
-    jsonTemplate.key =
-      jsonObject.length > 0 ? jsonObject[jsonObject.length - 1].key + 1 : 0;
-    const temp = [...jsonObject, jsonTemplate];
+    const newKey =
+      jsonObject.reduce((maxKey, item) => {
+        return Math.max(maxKey, item.key);
+      }, -1) + 1;
+    const newElement = { ...jsonTemplate, key: newKey };
+    const temp = [...jsonObject, newElement];
     setJson(temp);
   }
   function handelDel(key: number) {
@@ -237,6 +241,15 @@ function App() {
             onClick={toggleColorMode}
             icon={colorMode != "light" ? <BsFillSunFill /> : <FaMoon />}
           />
+          {/* <IconButton
+            size={"xs"}
+            variant={"outline"}
+            aria-label={"source"}
+            onClick={() =>
+              window.open("https://github.com/444ndrey/equipment", "_blank")
+            }
+            icon={<FaGithub />}
+          ></IconButton> */}
         </ButtonGroup>
         <Flex
           flex={1}
