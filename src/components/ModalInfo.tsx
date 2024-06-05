@@ -6,6 +6,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  useColorMode,
   Button,
 } from "@chakra-ui/react";
 import MarkdownPreview from "@uiw/react-markdown-preview";
@@ -17,6 +18,7 @@ type ModalProps = {
 };
 
 export default function ModalInfo({ isOpen, onClose }: ModalProps) {
+  const { colorMode } = useColorMode();
   return (
     <>
       <Modal
@@ -30,7 +32,10 @@ export default function ModalInfo({ isOpen, onClose }: ModalProps) {
           <ModalHeader>Как заполняется JSON</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <MarkdownPreview source={getMarkDown()} />
+            <MarkdownPreview
+              source={getMarkDown()}
+              wrapperElement={{ "data-color-mode": colorMode }}
+            />
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
