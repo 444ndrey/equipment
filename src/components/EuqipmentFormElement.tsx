@@ -67,7 +67,7 @@ export default function EquipmentFormElement({
   function handelChangeSale(value: string) {
     const updateValue = {
       ...equipment,
-      sale: { price: value, comment: equipment.rent.comment },
+      sale: { price: value, comment: equipment.sale.comment },
     };
     //setEquipment(updateValue);
     onChange(updateValue);
